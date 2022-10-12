@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+</style>
+</head>
+<body>
+	Select a file to see the column count.<br>
+	<input type='file' id='file'><br>
+	<button id="bt">log</button>
+	
+</body>
+<script>
+	var f
+	var intIndex=
+			[1,4,5,6,7,12,13,14,15,19,20,24,25,26,
+			27,28,29,30,31,32,33,34,35,36,37,38,43,
+			44,45,46,50,51,55,58,59,60,61,62,63,64,
+			65,66,67,68,118,211,212,213,217,218,219,
+			220,221,222,223,224,225,226,227,228,240,241]
+	
+	
+    document.getElementById('bt').onclick = function () {
+        let file = document.getElementById('file').files[0];
+        let fr = new FileReader();
+        fr.onload = function () {
+            let buffer = new Uint8Array(fr.result);
+			f=new TextDecoder('utf-8').decode(buffer)
+			arr=csvToArray(f)
+			console.log(arr)
+			console.log(parseLog(arr)) //for raw log data w/ header...
+        }
+        fr.readAsArrayBuffer(file);
+    }
+	
+	
+	function csvToArray (csv) {
+		rows = csv.split("\n");
+		return rows.map(function (row) {
+			return row.split(",").map(function(value,index){
+				let v=value.replaceAll("\"","")
+				return v
+				});
+    })};
+	
+	function parseLog (arr){
+		var h=[]
+		arr.map(function(item,index){if(item==''){h.push(index)}})
+		return arr.slice(h[2]+1,h[3])
+	}
+	
+	function getCol(matrix, col){
+		var column = [];
+		for(var i=0; i<matrix.length; i++){
+			column.push(matrix[i][col]);
+       }
+		return column;
+    }
+
+</script>
+</html>
